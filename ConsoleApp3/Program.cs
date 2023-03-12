@@ -1,16 +1,21 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
-namespace PrimeNumbers
+namespace TaskExample
 {
     class Program
     {
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Task task = Task.Run(() =>
-            {
-                for (int i = 2; i <= 1000; i++)
+            // Визначаємо межі для генерації простих чисел
+            int start = 2;
+            int end = 1000;
+
+            // Створюємо задачу, яка буде рахувати прості числа
+            Task<int> task = new Task<int>(() => {
+                int count = 0;
+                for (int i = start; i <= end; i++)
                 {
                     bool isPrime = true;
                     for (int j = 2; j < i; j++)
@@ -23,16 +28,19 @@ namespace PrimeNumbers
                     }
                     if (isPrime)
                     {
-                        Console.WriteLine(i);
+                        count++;
                     }
                 }
+                return count;
             });
 
-            // Очікуємо завершення задачі
-            task.Wait();
+            // Запускаємо задачу
+            task.Start();
 
-            Console.WriteLine("Усі прості числа від 0 до 1000 відображено.");
-            Console.ReadKey();
+            // Очікуємо завершення задачі та отримуємо результат
+            int result = task.Result;
+
+            Console.WriteLine("Знайдено {0} простих чисел від {1} до {2}.", result, start, end);
         }
     }
 }
